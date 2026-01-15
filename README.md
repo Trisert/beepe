@@ -7,7 +7,7 @@ A high-performance, memory-efficient Byte Pair Encoding (BPE) tokenizer written 
 - **Ultra-fast encoding**: ~25.9M tokens/sec (10.5x faster than tiktoken)
 - **Memory efficient**: 83% memory reduction through Arc sharing and optimized data structures
 - **Entropy-weighted training**: Better compression through intelligent merge selection
-- **Multiple encoding modes**: Byte-level and character-level with V2 optimizations
+- **Multiple encoding modes**: Byte-level and character-level with optimized encoding
 - **Python bindings**: Easy-to-use Python API via PyO3
 - **CLI tool**: Command-line interface for training, encoding, decoding, and benchmarking
 - **LLM-ready**: Special tokens support, chat templates, and role tokens

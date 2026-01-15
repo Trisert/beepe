@@ -38,4 +38,4 @@ pub use vocab_v2::UnifiedVocab;
 
 // Encoding modes
 pub mod encoding;
-pub use encoding::{ByteLevelEncoderV2, CharLevelEncoder};
+pub use encoding::{ByteLevelEncoder, CharLevelEncoder};

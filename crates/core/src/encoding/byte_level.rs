@@ -1,4 +1,4 @@
-//! Memory-efficient byte-level BPE encoding (v2).
+//! Memory-efficient byte-level BPE encoding.
 //!
 //! This module provides an optimized encoder that replaces the trie-based
 //! approach with first-byte indexing, reducing memory from ~8.6 MB to ~7.5 KB.
@@ -30,7 +30,7 @@ struct TokenMatch {
 ///
 /// This encoder uses first-byte indexing instead of a trie, which reduces
 /// memory overhead from ~8.6 MB to ~7.5 KB while maintaining fast lookup.
-pub struct ByteLevelEncoderV2 {
+pub struct ByteLevelEncoder {
     /// Reference to vocabulary (shared, no clone)
     vocab: Arc<Vocab>,
 
@@ -51,7 +51,7 @@ pub struct ByteLevelEncoderV2 {
     byte_decoder: AHashMap<char, u8>,
 }
 
-impl ByteLevelEncoderV2 {
+impl ByteLevelEncoder {
     /// Create a new memory-efficient byte-level encoder.
     pub fn new(vocab: Vocab, vocab_r: VocabR, merges: MergeMap) -> Arc<Self> {
         let byte_encoder = Self::build_byte_encoder();
@@ -392,7 +392,7 @@ mod tests {
 
     #[test]
     fn test_byte_encoder() {
-        let encoder = ByteLevelEncoderV2::build_byte_encoder();
+        let encoder = ByteLevelEncoder::build_byte_encoder();
         assert_eq!(encoder[0] as u32, 256);
         assert_eq!(encoder[255] as u32, 256 + 255);
     }
@@ -419,7 +419,7 @@ mod tests {
         }
 
         let merges = crate::core::MergeMap::new();
-        let encoder = ByteLevelEncoderV2::new(vocab_map, vocab_r_map, merges);
+        let encoder = ByteLevelEncoder::new(vocab_map, vocab_r_map, merges);
 
         let text = "Hello, world!";
         let encoded = encoder.encode(text).unwrap();

@@ -12,7 +12,7 @@ use std::collections::HashSet;
 
 /// Configuration for entropy-weighted BPE training.
 #[derive(Debug, Clone)]
-pub struct TrainingConfigV2 {
+pub struct TrainingConfig {
     /// Target vocabulary size
     pub vocab_size: usize,
     /// Minimum frequency for a pair to be merged
@@ -31,7 +31,7 @@ pub struct TrainingConfigV2 {
     pub prune_batch_size: usize,
 }
 
-impl Default for TrainingConfigV2 {
+impl Default for TrainingConfig {
     fn default() -> Self {
         Self {
             vocab_size: 30_000,
@@ -50,9 +50,9 @@ impl Default for TrainingConfigV2 {
 ///
 /// Trains a BPE tokenizer by considering frequency, information content,
 /// and token utility, resulting in better compression ratios.
-pub struct BpeTrainerV2 {
+pub struct BpeTrainer {
     /// Configuration
-    config: TrainingConfigV2,
+    config: TrainingConfig,
     /// Vocabulary being built
     vocab: Vocabulary,
     /// Merge rules: pair -> (rank, new_token_id)
@@ -65,9 +65,9 @@ pub struct BpeTrainerV2 {
     pair_contexts: AHashMap<Pair, HashSet<Pair>>,
 }
 
-impl BpeTrainerV2 {
+impl BpeTrainer {
     /// Create a new entropy-weighted BPE trainer.
-    pub fn new(config: TrainingConfigV2) -> Self {
+    pub fn new(config: TrainingConfig) -> Self {
         Self {
             config,
             vocab: Vocabulary::new(),
@@ -80,7 +80,7 @@ impl BpeTrainerV2 {
 
     /// Create a new trainer with default configuration.
     pub fn with_vocab_size(vocab_size: usize) -> Self {
-        Self::new(TrainingConfigV2 {
+        Self::new(TrainingConfig {
             vocab_size,
             ..Default::default()
         })
@@ -442,7 +442,7 @@ mod tests {
 
     #[test]
     fn test_entropy_calculation() {
-        let mut trainer = BpeTrainerV2::with_vocab_size(100);
+        let mut trainer = BpeTrainer::with_vocab_size(100);
         let text = "hello world";
 
         trainer.calculate_char_entropy(text).unwrap();
@@ -457,7 +457,7 @@ mod tests {
 
     #[test]
     fn test_merge_score_calculation() {
-        let mut trainer = BpeTrainerV2::with_vocab_size(100);
+        let mut trainer = BpeTrainer::with_vocab_size(100);
 
         // Add some characters to vocab
         trainer.vocab.add_token("h").unwrap();
@@ -474,7 +474,7 @@ mod tests {
 
     #[test]
     fn test_basic_training() {
-        let mut trainer = BpeTrainerV2::with_vocab_size(50);
+        let mut trainer = BpeTrainer::with_vocab_size(50);
         let text = "hello world hello world";
 
         let (vocab, merges) = trainer.train(text).unwrap();

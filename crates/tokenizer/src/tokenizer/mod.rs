@@ -5,7 +5,7 @@
 
 use crate::pre_tokenizer::{Normalizer, Splitter};
 use beepe_core::{
-    ByteLevelEncoderV2, CharLevelEncoder, Result, SpecialTokensConfig, TokenizerError, Vocabulary,
+    ByteLevelEncoder, CharLevelEncoder, Result, SpecialTokensConfig, TokenizerError, Vocabulary,
 };
 use std::fs::File;
 use std::io::BufReader;
@@ -117,8 +117,8 @@ pub struct Tokenizer {
     merges: AHashmap<(u32, u32), (u32, u32)>,
     /// Configuration
     config: TokenizerConfig,
-    /// Byte-level encoder (V2 with Arc sharing)
-    byte_encoder: Option<Arc<ByteLevelEncoderV2>>,
+    /// Byte-level encoder (with Arc sharing)
+    byte_encoder: Option<Arc<ByteLevelEncoder>>,
     /// Character-level encoder
     char_encoder: Option<CharLevelEncoder>,
     /// Text splitter
@@ -142,15 +142,15 @@ impl Tokenizer {
         let (vocab_arc, vocab_r_arc) = vocab.get_arcs();
         let merges_arc = Arc::new(AHashmap::new());
 
-        // Create the byte-level encoder V2 with Arc sharing (zero-copy)
-        let byte_encoder = Some(ByteLevelEncoderV2::with_arcs(
+        // Create the byte-level encoder with Arc sharing (zero-copy)
+        let byte_encoder = Some(ByteLevelEncoder::with_arcs(
             vocab_arc.clone(),
             vocab_r_arc.clone(),
             merges_arc.clone(),
         ));
 
         // Create character-level encoder (still uses old approach for now)
-        // TODO: Migrate CharLevelEncoder to V2 as well
+        // TODO: Migrate CharLevelEncoder to use Arc sharing as well
         let vocab_map = (*vocab_arc).clone();
         let vocab_r_map = (*vocab_r_arc).clone();
         let char_encoder = Some(CharLevelEncoder::new(
@@ -353,21 +353,21 @@ impl Tokenizer {
     /// # Arguments
     /// * `data` - Training text data
     pub fn train(&mut self, data: &str) -> Result<()> {
-        use beepe_training::{BpeTrainerV2, TrainingConfigV2};
+        use beepe_training::{BpeTrainer, TrainingConfig};
 
         // Save special token IDs and strings before training
         let saved_special = self.vocab.special.clone();
         let special_tokens_config = self.config.special_tokens.clone();
 
         // Use entropy-weighted trainer for better compression
-        let training_config = TrainingConfigV2 {
+        let training_config = TrainingConfig {
             vocab_size: self.config.vocab_size,
             min_frequency: self.config.min_frequency,
             parallel: true,
             ..Default::default()
         };
 
-        let mut trainer = BpeTrainerV2::new(training_config);
+        let mut trainer = BpeTrainer::new(training_config);
         let (vocab, merges) = trainer.train(data)?;
 
         // For ByteLevel encoding, convert vocabulary entries to byte-mapped form
@@ -393,7 +393,7 @@ impl Tokenizer {
         // Rebuild byte encoder with new vocab/merges using Arc sharing
         let (vocab_arc, vocab_r_arc) = self.vocab.get_arcs();
         let merges_arc = Arc::new(self.merges.clone());
-        self.byte_encoder = Some(ByteLevelEncoderV2::with_arcs(
+        self.byte_encoder = Some(ByteLevelEncoder::with_arcs(
             vocab_arc,
             vocab_r_arc,
             merges_arc,
@@ -442,7 +442,7 @@ impl Tokenizer {
         let (vocab_arc, vocab_r_arc) = vocab.get_arcs();
         let merges_arc = Arc::new(merges.clone());
 
-        let byte_encoder = Some(ByteLevelEncoderV2::with_arcs(
+        let byte_encoder = Some(ByteLevelEncoder::with_arcs(
             vocab_arc.clone(),
             vocab_r_arc.clone(),
             merges_arc.clone(),
@@ -490,7 +490,7 @@ impl Tokenizer {
         let (vocab_arc, vocab_r_arc) = vocab.get_arcs();
         let merges_arc = Arc::new(merges.clone());
 
-        let byte_encoder = Some(ByteLevelEncoderV2::with_arcs(
+        let byte_encoder = Some(ByteLevelEncoder::with_arcs(
             vocab_arc.clone(),
             vocab_r_arc.clone(),
             merges_arc.clone(),
@@ -609,7 +609,7 @@ mod tests {
         // Create encoder manually for special token support
         let (vocab_arc, vocab_r_arc) = tokenizer.vocab.get_arcs();
         let merges_arc = Arc::new(AHashmap::new());
-        let encoder = ByteLevelEncoderV2::with_arcs(vocab_arc, vocab_r_arc, merges_arc);
+        let encoder = ByteLevelEncoder::with_arcs(vocab_arc, vocab_r_arc, merges_arc);
         tokenizer.byte_encoder = Some(encoder);
 
         let text = "Hello";

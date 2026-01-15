@@ -19,7 +19,7 @@ This is a Cargo workspace with the following crates:
 beepe/
 ├── crates/
 │   ├── core/          # Core BPE algorithms and data structures
-│   ├── training/      # Training infrastructure (BpeTrainerV2)
+│   ├── training/      # Training infrastructure (BpeTrainer)
 │   ├── tokenizer/     # High-level tokenizer API with I/O
 │   └── python/        # PyO3 Python bindings
 └── cli/               # Command-line interface (beepe-cli)
@@ -28,7 +28,7 @@ beepe/
 ### Crate Responsibilities
 
 - **`beepe-core`**: Vocabulary storage, merge rules, encoding modes (byte/char level), special tokens
-- **`beepe-training`**: `BpeTrainerV2` with parallel pair counting and entropy-weighted merge selection
+- **`beepe-training`**: `BpeTrainer` with parallel pair counting and entropy-weighted merge selection
 - **`beepe-tokenizer`**: `Tokenizer` and `TokenizerBuilder` APIs, model I/O (HuggingFace/tiktoken formats)
 - **`beepe-python`**: Python bindings via PyO3
 - **`beepe-cli`**: `train`, `encode`, `decode`, `benchmark` commands
@@ -124,13 +124,13 @@ python benchmark.py --beepe-cli ../target/release/beepe
 
 ```rust
 use std::sync::Arc;
-use beepe_core::ByteLevelEncoderV2;
+use beepe_core::ByteLevelEncoder;
 
 // Get Arcs from existing encoder
 let (vocab, vocab_r, merges) = encoder.get_arcs();
 
 // Create new encoder with zero-copy sharing
-let encoder2 = ByteLevelEncoderV2::with_arcs(vocab, vocab_r, merges);
+let encoder2 = ByteLevelEncoder::with_arcs(vocab, vocab_r, merges);
 ```
 
 ### Layered Architecture
@@ -150,7 +150,7 @@ Data structures (AHashMap, compact_str, dary_heap)
 - **`AHashMap`**: O(1) hash map using aHash (faster than std::collections::HashMap)
 - **`compact_str`**: Stack-allocated strings for small values (memory efficiency)
 - **`dary_heap`**: D-ary heap for priority queue operations
-- **`UnifiedVocab`**: Memory-efficient vocabulary storage (V2)
+- **`UnifiedVocab`**: Memory-efficient vocabulary storage
 
 ## Testing Strategy
 
@@ -187,7 +187,7 @@ Tests in `/home/nicola/beepe/tests/test_performance.py` enforce minimum performa
 - `ahash`: Fast hashing for AHashMap
 - `compact_str`: Stack-allocated small strings
 - `dary_heap`: Efficient priority queues
-- `rayon`: Parallel processing (used in `BpeTrainerV2`)
+- `rayon`: Parallel processing (used in `BpeTrainer`)
 
 ### Build Dependencies
 - `maturin>=1.0`: PyO3 bridge for Python bindings

@@ -5,8 +5,8 @@
 //! - Character-level: Using Unicode grapheme clusters
 //! - Hybrid: Mixed strategies
 
-pub mod byte_level_v2;
+pub mod byte_level;
 pub mod char_level;
 
-pub use byte_level_v2::ByteLevelEncoderV2;
+pub use byte_level::ByteLevelEncoder;
 pub use char_level::CharLevelEncoder;
