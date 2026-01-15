@@ -224,10 +224,10 @@ impl Tokenizer {
     /// * `text` - The text to encode
     /// * `add_special_tokens` - Whether to add special tokens (BOS, EOS, etc.)
     pub fn encode(&self, text: &str, add_special_tokens: bool) -> Result<Encoding> {
-        // Check text size limit (1M characters like tiktoken)
-        if text.len() > 1_000_000 {
+        // Check text size limit (10M characters for large file processing)
+        if text.len() > 10_000_000 {
             return Err(TokenizerError::Tokenization(format!(
-                "Text too large: {} characters (max: 1,000,000)",
+                "Text too large: {} characters (max: 10,000,000)",
                 text.len()
             )));
         }
