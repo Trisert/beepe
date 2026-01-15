@@ -2,6 +2,17 @@
 
 A high-performance, memory-efficient Byte Pair Encoding (BPE) tokenizer written in Rust with Python bindings.
 
+## About
+
+Beepe is a high-performance Byte Pair Encoding (BPE) tokenizer designed for modern LLM applications. It provides:
+
+- **Production-ready**: Battle-tested with comprehensive test coverage
+- **Developer-friendly**: Simple API in Python and Rust
+- **Research-backed**: Implements entropy-weighted training for optimal compression
+- **Community-driven**: Open source (Apache 2.0) and open to contributions
+
+Perfect for training tokenizers for language models, or as a drop-in replacement for tiktoken in your applications.
+
 ## Features
 
 - **Ultra-fast encoding**: ~25.9M tokens/sec (10.5x faster than tiktoken)
@@ -257,7 +268,7 @@ Contributions are welcome! Please:
 
 ## License
 
-[Specify your license here]
+Beepe is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 
