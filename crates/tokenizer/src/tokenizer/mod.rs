@@ -195,7 +195,7 @@ impl Tokenizer {
         let mut new_vocab = Vocabulary::with_capacity(original_vocab.len());
 
         // Copy special tokens as-is
-        new_vocab.special = original_vocab.special.clone();
+        new_vocab.special = original_vocab.special;
 
         // Convert each vocabulary entry to byte-mapped form
         for (token_str, &token_id) in original_vocab.vocab.iter() {
@@ -356,7 +356,7 @@ impl Tokenizer {
         use beepe_training::{BpeTrainer, TrainingConfig};
 
         // Save special token IDs and strings before training
-        let saved_special = self.vocab.special.clone();
+        let saved_special = self.vocab.special;
         let special_tokens_config = self.config.special_tokens.clone();
 
         // Use entropy-weighted trainer for better compression

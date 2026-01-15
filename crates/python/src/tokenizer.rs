@@ -21,7 +21,7 @@ pub struct PyTokenizer {
 impl PyTokenizer {
     /// Load a tokenizer from a directory
     #[staticmethod]
-    fn load(path: &str) -> PyResult<Self> {
+    fn load(path: &str) -> PyResult<Self>{
         let path_buf = PathBuf::from(path);
         let inner = Tokenizer::load(&path_buf).map_err(|e| e.into_py_err())?;
         Ok(PyTokenizer { inner })
@@ -29,7 +29,7 @@ impl PyTokenizer {
 
     /// Load a tokenizer from HuggingFace format
     #[staticmethod]
-    fn load_huggingface(path: &str) -> PyResult<Self> {
+    fn load_huggingface(path: &str) -> PyResult<Self>{
         let path_buf = PathBuf::from(path);
         let inner = Tokenizer::load_huggingface(&path_buf).map_err(|e| e.into_py_err())?;
         Ok(PyTokenizer { inner })
@@ -43,7 +43,7 @@ impl PyTokenizer {
 
     /// Encode text to token IDs
     #[pyo3(signature = (text, add_special_tokens=false))]
-    fn encode(&self, text: &str, add_special_tokens: bool) -> PyResult<Vec<u32>> {
+    fn encode(&self, text: &str, add_special_tokens: bool) -> PyResult<Vec<u32>>{
         let encoding: Encoding = self
             .inner
             .encode(text, add_special_tokens)
@@ -57,7 +57,7 @@ impl PyTokenizer {
         &self,
         texts: Vec<String>,
         add_special_tokens: bool,
-    ) -> PyResult<Vec<Vec<u32>>> {
+    ) -> PyResult<Vec<Vec<u32>>>{
         let encodings: Vec<Encoding> = self
             .inner
             .encode_batch(&texts, add_special_tokens)
@@ -67,7 +67,7 @@ impl PyTokenizer {
 
     /// Decode token IDs back to text
     #[pyo3(signature = (ids, skip_special_tokens=false))]
-    fn decode(&self, ids: &Bound<'_, PyList>, skip_special_tokens: bool) -> PyResult<String> {
+    fn decode(&self, ids: &Bound<'_, PyList>, skip_special_tokens: bool) -> PyResult<String>{
         // Convert Python list to Vec<u32>
         let rust_ids: Vec<u32> = ids
             .iter()
@@ -87,14 +87,14 @@ impl PyTokenizer {
     }
 
     /// Save the tokenizer to a directory
-    fn save(&self, path: &str) -> PyResult<()> {
+    fn save(&self, path: &str) -> PyResult<()>{
         let path_buf = PathBuf::from(path);
         self.inner.save(&path_buf).map_err(|e| e.into_py_err())?;
         Ok(())
     }
 
     /// Train the tokenizer on text data
-    fn train(&mut self, data: &str) -> PyResult<()> {
+    fn train(&mut self, data: &str) -> PyResult<()>{
         self.inner.train(data).map_err(|e| e.into_py_err())?;
         Ok(())
     }
@@ -110,7 +110,7 @@ impl PyTokenizer {
     }
 
     /// Encode text without special tokens
-    fn encode_ordinary(&self, text: &str) -> PyResult<Vec<u32>> {
+    fn encode_ordinary(&self, text: &str) -> PyResult<Vec<u32>>{
         let encoding: Encoding = self
             .inner
             .encode(text, false)
@@ -119,7 +119,7 @@ impl PyTokenizer {
     }
 
     /// Encode a single token from bytes
-    fn encode_single_token(&self, text: &[u8]) -> PyResult<u32> {
+    fn encode_single_token(&self, text: &[u8]) -> PyResult<u32>{
         let token_str = std::str::from_utf8(text)
             .map_err(|_| PyErr::new::<pyo3::exceptions::PyValueError, _>("Invalid UTF-8 bytes"))?;
 
@@ -131,7 +131,7 @@ impl PyTokenizer {
     }
 
     /// Decode single token to bytes
-    fn decode_single_token_bytes(&self, token_id: u32) -> PyResult<Vec<u8>> {
+    fn decode_single_token_bytes(&self, token_id: u32) -> PyResult<Vec<u8>>{
         let token_str = self.inner.vocab().get_token(token_id).ok_or_else(|| {
             PyErr::new::<pyo3::exceptions::PyKeyError, _>(format!(
                 "Token ID not found: {}",
@@ -143,7 +143,7 @@ impl PyTokenizer {
     }
 
     /// Encode batch without special tokens
-    fn encode_ordinary_batch(&self, texts: Vec<String>) -> PyResult<Vec<Vec<u32>>> {
+    fn encode_ordinary_batch(&self, texts: Vec<String>) -> PyResult<Vec<Vec<u32>>>{
         let encodings: Vec<Encoding> = self
             .inner
             .encode_batch(&texts, false)
@@ -152,7 +152,7 @@ impl PyTokenizer {
     }
 
     /// Decode batch of token lists
-    fn decode_batch(&self, token_lists: Vec<Vec<u32>>) -> PyResult<Vec<String>> {
+    fn decode_batch(&self, token_lists: Vec<Vec<u32>>) -> PyResult<Vec<String>>{
         let results: Vec<String> = token_lists
             .into_iter()
             .map(|ids| self.inner.decode(&ids, false))
@@ -176,7 +176,7 @@ impl PyTokenizer {
     }
 
     /// Decode token IDs back to text with character offsets
-    fn decode_with_offsets(&self, ids: &Bound<'_, PyList>) -> PyResult<(String, Vec<usize>)> {
+    fn decode_with_offsets(&self, ids: &Bound<'_, PyList>) -> PyResult<(String, Vec<usize>)>{
         let rust_ids: Vec<u32> = ids
             .iter()
             .map(|item| item.extract::<u32>())
@@ -257,7 +257,7 @@ impl PyTokenizerBuilder {
         }
     }
 
-    fn build(&self) -> PyResult<PyTokenizer> {
+    fn build(&self) -> PyResult<PyTokenizer>{
         let inner = self.inner.clone().build().map_err(|e| e.into_py_err())?;
         Ok(PyTokenizer { inner })
     }

@@ -294,12 +294,12 @@ impl BpeTrainer {
                     let entry = self
                         .pair_contexts
                         .entry(pairs[i])
-                        .or_insert_with(HashSet::new);
+                        .or_default();
                     entry.insert(pairs[j]);
                     let entry = self
                         .pair_contexts
                         .entry(pairs[j])
-                        .or_insert_with(HashSet::new);
+                        .or_default();
                     entry.insert(pairs[i]);
                 }
             }

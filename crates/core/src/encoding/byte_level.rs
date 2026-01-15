@@ -193,7 +193,7 @@ impl ByteLevelEncoder {
                 let match_length = self.try_match(&chars, pos, token_match);
 
                 if let Some(length) = match_length {
-                    if best_match.map_or(true, |(_, l)| length > l) {
+                    if best_match.is_none_or(|(_, l)| length > l) {
                         best_match = Some((token_match.token_id, length));
                     }
                 }
@@ -349,7 +349,7 @@ impl ByteLevelEncoder {
                                 heap.push(MergeOp {
                                     rank,
                                     pos: merge_op.pos - 1,
-                                    new_id: new_id,
+                                    new_id,
                                 });
                             }
                         }

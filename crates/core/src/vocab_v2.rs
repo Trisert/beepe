@@ -45,10 +45,10 @@ impl UnifiedVocab {
     /// Create a new unified vocabulary with initial capacity.
     pub fn with_capacity(capacity: usize) -> Self {
         // Initialize byte mapping (will be filled as tokens are added)
-        let mut byte_mapping = [0u32; 256];
+        let byte_mapping = [0u32; 256];
 
         // Pre-allocate space for tokens
-        let mut entries = Vec::with_capacity(capacity);
+        let entries = Vec::with_capacity(capacity);
 
         // Initialize special token IDs as None
         let special = SpecialTokensConfig::default();
