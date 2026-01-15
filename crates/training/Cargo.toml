@@ -1,0 +1,20 @@
+[package]
+name = "beepe-training"
+version.workspace = true
+edition.workspace = true
+
+[package.metadata.docs.rs]
+all-features = true
+
+[dependencies]
+# Workspace dependencies
+beepe-core = { path = "../core" }
+rayon.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+ahash.workspace = true
+
+[dev-dependencies]
+criterion.workspace = true
+proptest.workspace = true
+rand.workspace = true

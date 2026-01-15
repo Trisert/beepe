@@ -1,0 +1,53 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+    
+    - name: Cache Rust dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    
+    - name: Install dependencies
+      run: |
+        pip install maturin[release]
+        pip install -e crates/python"[test]"
+        pip install tiktoken>=0.8.0 hypothesis>=6.0.0
+    
+    - name: Build Python bindings
+      run: |
+        maturin develop --release
+    
+    - name: Run tests
+      run: |
+        pytest --cov=beepe --cov-report=xml --cov-report=term -v
+    
+    - name: Upload coverage
+      if: matrix.python-version == '3.11'
+      uses: codecov/codecov-action@v4
+      with:
+        files: ./coverage.xml
+        fail_ci_if_error: false

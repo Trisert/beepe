@@ -1,0 +1,15 @@
+[project]
+name = "beepe-benchmarks"
+version = "0.1.0"
+description = "Benchmark beepe against tiktoken and sentencepiece"
+requires-python = ">=3.9"
+dependencies = [
+    "tiktoken>=0.8.0",
+    "sentencepiece>=0.2.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -1,0 +1,55 @@
+{
+  "beepe": {
+    "training": {
+      "time_sec": 15.365678548812866,
+      "time_ms": 15365.678548812866,
+      "text_size": 5458199,
+      "text_size_mb": 5.205344200134277,
+      "vocab_size": 30165,
+      "throughput_chars_sec": 355220.1734964509,
+      "throughput_mb_sec": 0.3387643561329373,
+      "memory_before_mb": 85.09375,
+      "memory_after_mb": 112.4375,
+      "memory_used_mb": 27.34375,
+      "peak_memory_mb": 112.4375
+    },
+    "encode": {
+      "time_ms": 1940.2670860290527,
+      "time_per_iter_ms": 194.02670860290527,
+      "text_size": 5458199,
+      "token_count": 2608085,
+      "iterations": 10,
+      "throughput_chars_sec": 28131173.482774172,
+      "throughput_tokens_sec": 13441886.525724158,
+      "compression_ratio": 2.092799506151065,
+      "chars_per_token": 2.092799506151065
+    },
+    "decode": {
+      "time_ms": 671.3201999664307,
+      "time_per_iter_ms": 67.13201999664307,
+      "token_count": 2608085,
+      "iterations": 10,
+      "throughput_tokens_sec": 38850089.720679
+    }
+  },
+  "tiktoken": {
+    "encode": {
+      "time_ms": 4195.743560791016,
+      "time_per_iter_ms": 419.57435607910156,
+      "text_size": 5458199,
+      "token_count": 1474814,
+      "iterations": 10,
+      "throughput_chars_sec": 13008895.612702737,
+      "throughput_tokens_sec": 3515024.1634928617,
+      "compression_ratio": 3.700940593186666,
+      "chars_per_token": 3.700940593186666
+    },
+    "decode": {
+      "time_ms": 316.9384002685547,
+      "time_per_iter_ms": 31.69384002685547,
+      "token_count": 1474814,
+      "iterations": 10,
+      "throughput_tokens_sec": 46533143.309562065
+    }
+  }
+}

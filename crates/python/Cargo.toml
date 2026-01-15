@@ -1,0 +1,13 @@
+[package]
+name = "beepe-python"
+version.workspace = true
+edition.workspace = true
+
+[lib]
+name = "beepe"
+crate-type = ["cdylib"]
+
+[dependencies]
+beepe-core = { path = "../core" }
+beepe-tokenizer = { path = "../tokenizer" }
+pyo3 = { version = "0.22", features = ["extension-module"] }
