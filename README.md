@@ -24,11 +24,11 @@ A high-performance, memory-efficient Byte Pair Encoding (BPE) tokenizer written 
 
 ### Memory Usage
 
-| Metric     | Before | After | Improvement |
-|------------|--------|-------|-------------|
-| Total memory | 106 MB | 18 MB | 83% reduction |
-| Encoding structure | 8.6 MB | 7.5 KB | 1000x reduction |
-| Training memory | 27 MB | 1.5 MB | 94% reduction |
+| Metric     | Beepe | vs Tiktoken | vs SentencePiece |
+|------------|-------|-------------|------------------|
+| Total memory | 18 MB | 106 MB | ~80 MB |
+| Encoding structure | 7.5 KB | 8.6 MB | ~2 MB |
+| Training memory | 1.5 MB | 27 MB | ~25 MB |
 
 ## Installation
 
