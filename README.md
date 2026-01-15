@@ -244,14 +244,6 @@ Beepe is organized as a Cargo workspace with the following crates:
 
 See [CLAUDE.md](CLAUDE.md) for detailed architecture documentation.
 
-## Migration from v0.1
-
-If you're upgrading from v0.1, see [MIGRATION.md](MIGRATION.md) for important changes:
-
-- `ByteLevelEncoder` → `ByteLevelEncoderV2` (1000x less memory)
-- `BpeTrainer` → `BpeTrainerV2` (better compression)
-- New Arc sharing API for zero-copy vocabulary access
-
 ## Contributing
 
 Contributions are welcome! Please:

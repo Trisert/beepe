@@ -12,14 +12,16 @@
 //! # Example
 //!
 //! ```rust,ignore
-//! use beepe_training::{BpeTrainer, TrainingConfig};
+//! use beepe_training::{BpeTrainerV2, TrainingConfigV2};
 //!
-//! let config = TrainingConfig::builder()
-//!     .vocab_size(30_000)
-//!     .min_frequency(2)
-//!     .build()?;
+//! let config = TrainingConfigV2 {
+//!     vocab_size: 30_000,
+//!     min_frequency: 2,
+//!     parallel: true,
+//!     ..Default::default()
+//! };
 //!
-//! let trainer = BpeTrainer::new(config);
+//! let trainer = BpeTrainerV2::new(config);
 //! let (vocab, merges) = trainer.train(&["path/to/text.txt"])?;
 //! ```
 
@@ -27,4 +29,4 @@ pub use beepe_core::{Result, TokenizerError};
 
 // Training infrastructure
 pub mod training;
-pub use training::{BpeTrainer, BpeTrainerV2, PairCounter, TrainingConfig, TrainingConfigV2};
+pub use training::{BpeTrainerV2, PairCounter, TrainingConfigV2};

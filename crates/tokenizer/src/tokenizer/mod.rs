@@ -352,36 +352,23 @@ impl Tokenizer {
     ///
     /// # Arguments
     /// * `data` - Training text data
-    #[allow(deprecated)]
     pub fn train(&mut self, data: &str) -> Result<()> {
-        use beepe_training::{BpeTrainer, BpeTrainerV2, TrainingConfig, TrainingConfigV2};
+        use beepe_training::{BpeTrainerV2, TrainingConfigV2};
 
         // Save special token IDs and strings before training
         let saved_special = self.vocab.special.clone();
         let special_tokens_config = self.config.special_tokens.clone();
 
-        let (vocab, merges) = if self.config.use_entropy_weighted_training {
-            // Use entropy-weighted trainer for better compression
-            let training_config = TrainingConfigV2 {
-                vocab_size: self.config.vocab_size,
-                min_frequency: self.config.min_frequency,
-                parallel: true,
-                ..Default::default()
-            };
-
-            let mut trainer = BpeTrainerV2::new(training_config);
-            trainer.train(data)?
-        } else {
-            // Use original frequency-based trainer (deprecated)
-            let training_config = TrainingConfig {
-                vocab_size: self.config.vocab_size,
-                min_frequency: self.config.min_frequency,
-                parallel: true,
-            };
-
-            let mut trainer = BpeTrainer::new(training_config);
-            trainer.train(data)?
+        // Use entropy-weighted trainer for better compression
+        let training_config = TrainingConfigV2 {
+            vocab_size: self.config.vocab_size,
+            min_frequency: self.config.min_frequency,
+            parallel: true,
+            ..Default::default()
         };
+
+        let mut trainer = BpeTrainerV2::new(training_config);
+        let (vocab, merges) = trainer.train(data)?;
 
         // For ByteLevel encoding, convert vocabulary entries to byte-mapped form
         // This ensures the encoder (which uses byte-mapped characters) can find the learned tokens

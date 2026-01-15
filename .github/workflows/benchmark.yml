@@ -24,7 +24,7 @@ jobs:
       run: |
         pip install maturin[release]
         pip install -e crates/python
-        pip install -r benchmarks/requirements.txt
+        pip install -e benchmarks
     
     - name: Build Python bindings
       run: |

@@ -116,20 +116,6 @@ cd benchmarks
 python benchmark.py --beepe-cli ../target/release/beepe
 ```
 
-## Critical Migration Notes (v0.2)
-
-**Always check `MIGRATION.md` before making changes.** Several APIs are deprecated:
-
-### Deprecated APIs (Do Not Use)
-- `ByteLevelEncoder` → Use `ByteLevelEncoderV2` (1000x less memory)
-- `BpeTrainer` → Use `BpeTrainerV2` (better compression via entropy weighting)
-- `TrainingConfig` → Use `TrainingConfigV2`
-
-### Why V2 Matters
-- **Arc sharing**: Zero-copy vocabulary access across multiple encoders via `get_ar()`
-- **First-byte indexing**: 1000x memory reduction for encoding structures (8.6MB → 7.5KB)
-- **Entropy-weighted training**: Better compression through intelligent merge selection
-
 ## Architecture Patterns
 
 ### Memory Optimization Patterns
