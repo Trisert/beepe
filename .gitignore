@@ -1,1 +1,42 @@
+# Rust
 /target
+**/*.rs.bk
+Cargo.lock.backup
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.pytest_cache/
+.coverage
+.hypothesis/
+.coverage.*
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Benchmark results
+benchmark_results.json
+benchmark_results.png
+benchmarks/results/*.json
+benchmarks/results/*.png
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Backup files
+*.backup
+*.bak
+*.old
+
+# OS
+.DS_Store
+Thumbs.db
